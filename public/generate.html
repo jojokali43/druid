@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Pi Wallet Generator</h1>
+            <button class="theme-toggle" id="themeToggle">🌓</button>
+            <button id="logoutBtn" class="logout-btn">
+                🔒 Logout
+            </button>
+            
+        </header>
+        
+        <form id="walletForm">
+            <div class="form-group">
+                <label for="mnemonic">Enter your 24-word mnemonic phrase:</label>
+                <textarea id="mnemonic" rows="3" required placeholder="Enter your 24-word phrase separated by spaces"></textarea>
+            </div>
+            
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="agreeTerms">
+                    <span class="checkmark"></span>
+                    I understand that my secret key gives full access to my wallet
+                </label>
+            </div>
+            
+            <div class="controls">
+                <button type="submit" id="submitBtn">Generate Wallet</button>
+            </div>
+        </form>
+        
+        <div id="result" class="hidden">
+            <h2>Generated Wallet</h2>
+            <div class="form-group">
+                <label>Public Key (Wallet Address):</label>
+                <div class="output-group">
+                    <input type="text" id="publicKey" readonly>
+                    <button class="copy-btn" onclick="copyToClipboard('publicKey')">Copy</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Secret Key:</label>
+                <div class="output-group">
+                    <input type="text" id="secretKey" readonly>
+                    <button class="copy-btn" onclick="copyToClipboard('secretKey')">Copy</button>
+                </div>
+            </div>
+            <div class="warning">
+                <p>⚠️ Never share your secret key with anyone!</p>
+                <p>⚠️ Anyone with this key can access your Pi coins!</p>
+                <p>⚠️ Store it securely and never enter it on untrusted sites!</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-links-container">
+        <a href="index.html" class="nav-link">
+            <i class="fas fa-exchange-alt"></i> Transfer
+        </a>
+        <a href="generate.html" class="nav-link">
+            <i class="fas fa-key"></i> Generate
+        </a>
+        <a href="monitor.html" class="nav-link">
+            <i class="fas fa-eye"></i> Monitor
+        </a>
+    </div>
+        
+
+    <script src="generate.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', async () => {
+                    const confirmLogout = confirm("Are you sure you want to logout?");
+                    if (!confirmLogout) return;
+        
+                    try {
+                        const response = await fetch('/logout', { method: 'POST' });
+                        const result = await response.json();
+                        if (result.success) {
+                            alert('✅ Logged out successfully.');
+                            window.location.href = '/login.html';
+                        } else {
+                            alert('❌ Logout failed.');
+                        }
+                    } catch (error) {
+                        console.error('Logout Error:', error);
+                        alert('❌ Error during logout.');
+                    }
+                });
+            }
+        });
+        </script>
+        
+</body>
+</html>

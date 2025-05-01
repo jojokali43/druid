@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoring Wallets</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-eye"></i> Monitoring Status</h1>
+            <button class="theme-toggle" id="themeToggle">
+                🌓
+            </button>
+            <button id="logoutBtn" class="logout-btn">
+                🔒 Logout
+            </button>
+            
+        </header>
+
+        <!-- Monitoring Wallets Section -->
+        <div id="monitoringList">
+            <h2>Currently Monitoring Wallets</h2>
+            <div class="wallet-item">
+                No wallets currently being monitored.
+            </div>
+        </div>
+
+        <!-- Transfer Logs Section -->
+        <div id="transferLogs">
+            <h2>Transfer Logs</h2>
+            <div id="logs">
+                <div class="log-item">
+                    No transfer logs yet.
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="nav-links-container">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-exchange-alt"></i> Transfer
+            </a>
+            <a href="generate.html" class="nav-link">
+                <i class="fas fa-key"></i> Generate
+            </a>
+            <a href="monitor.html" class="nav-link">
+                <i class="fas fa-eye"></i> Monitor
+            </a>
+        </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="monitor.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+    <!-- Theme Toggle Script -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+
+            const icon = themeToggle.querySelector('i');
+            if (icon) {
+                icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+        });
+
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+
+        const icon = themeToggle.querySelector('i');
+        if (icon) {
+            icon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+    });
+    </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', async () => {
+                const confirmLogout = confirm("Are you sure you want to logout?");
+                if (!confirmLogout) return;
+    
+                try {
+                    const response = await fetch('/logout', { method: 'POST' });
+                    const result = await response.json();
+                    if (result.success) {
+                        alert('✅ Logged out successfully.');
+                        window.location.href = '/login.html';
+                    } else {
+                        alert('❌ Logout failed.');
+                    }
+                } catch (error) {
+                    console.error('Logout Error:', error);
+                    alert('❌ Error during logout.');
+                }
+            });
+        }
+    });
+    </script>
+    
+</body>
+</html>
+    
